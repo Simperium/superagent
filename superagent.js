@@ -367,7 +367,7 @@ Emitter.prototype.hasListeners = function(event){
 };
 
 });
-require.register("RedVentures-reduce/index.js", function(exports, require, module){
+require.register("component-reduce/index.js", function(exports, require, module){
 
 /**
  * Reduce `arr` with `fn`.
@@ -698,9 +698,15 @@ function Response(req, options) {
   // other headers fails.
   this.header['content-type'] = this.xhr.getResponseHeader('content-type');
   this.setHeaderProperties(this.header);
-  this.body = this.req.method != 'HEAD'
-    ? this.parseBody(this.text)
-    : null;
+  if ( this.req.method == 'HEAD' ) {
+    this.body = null;
+  } else {
+    if ( this.req._responseType ) {
+      this.body = this.xhr.response;
+    } else {
+      this.body = this.parseBody(this.text);
+    }
+  }
 }
 
 /**
@@ -1168,6 +1174,18 @@ Request.prototype.withCredentials = function(){
 };
 
 /**
+ * Set the expected response type.
+ *
+ * 'arraybuffer', 'blob', 'document', 'json', ...
+ *
+ * @api public
+ */
+Request.prototype.responseType = function( type ) {
+  this._responseType = type;
+  return this;
+};
+
+/**
  * Initiate request, invoking callback `fn(res)`
  * with an instanceof `Response`.
  *
@@ -1224,6 +1242,8 @@ Request.prototype.end = function(fn){
 
   // CORS
   if (this._withCredentials) xhr.withCredentials = true;
+
+  if (this._responseType) xhr.responseType = this._responseType;
 
   // body
   if ('GET' != this.method && 'HEAD' != this.method && 'string' != typeof data && !isHost(data)) {
@@ -1397,13 +1417,13 @@ module.exports = request;
 require.alias("component-emitter/index.js", "superagent/deps/emitter/index.js");
 require.alias("component-emitter/index.js", "emitter/index.js");
 
-require.alias("RedVentures-reduce/index.js", "superagent/deps/reduce/index.js");
-require.alias("RedVentures-reduce/index.js", "reduce/index.js");
+require.alias("component-reduce/index.js", "superagent/deps/reduce/index.js");
+require.alias("component-reduce/index.js", "reduce/index.js");
 
 require.alias("superagent/lib/client.js", "superagent/index.js");if (typeof exports == "object") {
   module.exports = require("superagent");
 } else if (typeof define == "function" && define.amd) {
-  define(function(){ return require("superagent"); });
+  define([], function(){ return require("superagent"); });
 } else {
   this["superagent"] = require("superagent");
 }})();
