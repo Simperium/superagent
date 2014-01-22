@@ -132,6 +132,13 @@ app.get('/xdomain', function(req, res){
   res.send(req.cookies.name);
 });
 
+app.get('/transparent.png', function(req, res){
+  var png = new Buffer( 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==', 'base64' );
+  res
+    .header('Content-Type', 'image/png')
+    .send(png);
+});
+
 app.use(express.static(__dirname + '/../'));
 
 var server = app.listen(process.env.ZUUL_PORT, function() {
