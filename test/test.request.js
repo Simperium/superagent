@@ -1,18 +1,16 @@
-
-var assert = require('assert');
-var request = require('../');
+var request = superagent;
 
 test('Request inheritance', function(){
   assert(request.get('/') instanceof request.Request);
 });
 
 test('request() simple GET without callback', function(next){
-  request('GET', 'test/test.request.js').end();
+  request('GET', 'test.request.js').end();
   next();
 });
 
 test('request() simple GET', function(next){
-  request('GET', 'test/test.request.js').end(function(res){
+  request('GET', 'test.request.js').end(function(res){
     assert(res instanceof request.Response, 'respond with Response');
     assert(res.ok, 'response should be ok');
     assert(res.text, 'res.text');
@@ -21,7 +19,7 @@ test('request() simple GET', function(next){
 });
 
 test('request() simple HEAD', function(next){
-  request.head('test/test.request.js').end(function(res){
+  request.head('test.request.js').end(function(res){
     assert(res instanceof request.Response, 'respond with Response');
     assert(res.ok, 'response should be ok');
     assert(!res.text, 'res.text');

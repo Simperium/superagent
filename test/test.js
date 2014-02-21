@@ -118,3 +118,7 @@ function eql(a, b) {
 assert.eql = function(a, b, msg){
   assert(eql(a, b), msg);
 };
+
+assert.deepEqual = function(a, b, msg){
+  assert(eql(a, b), msg);
+};

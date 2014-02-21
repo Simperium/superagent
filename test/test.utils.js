@@ -1,6 +1,4 @@
-
-var assert = require('assert');
-var request = require('../');
+var request = superagent;
 
 function serialize(obj, res) {
   var val = request.serializeObject(obj);
