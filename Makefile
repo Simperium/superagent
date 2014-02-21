@@ -27,7 +27,7 @@ components:
 	component install
 
 test-server:
-	@node test/server
+	@ZUUL_PORT=4000 node test/server
 
 docs: test-docs
 
