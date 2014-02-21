@@ -690,7 +690,6 @@ function Response(req, options) {
   options = options || {};
   this.req = req;
   this.xhr = this.req.xhr;
-  this.text = this.xhr.responseText;
   this.setStatusProperties(this.xhr.status);
   this.header = this.headers = parseHeader(this.xhr.getAllResponseHeaders());
   // getAllResponseHeaders sometimes falsely returns "" for CORS requests, but
@@ -699,11 +698,14 @@ function Response(req, options) {
   this.header['content-type'] = this.xhr.getResponseHeader('content-type');
   this.setHeaderProperties(this.header);
   if ( this.req.method == 'HEAD' ) {
+    this.text = '';
     this.body = null;
   } else {
     if ( this.req._responseType ) {
+      this.text = null;
       this.body = this.xhr.response;
     } else {
+      this.text = this.xhr.responseText;
       this.body = this.parseBody(this.text);
     }
   }
